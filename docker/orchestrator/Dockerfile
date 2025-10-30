@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     && curl -SL "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-linux-arm64" \
        -o /usr/local/lib/docker/cli-plugins/docker-compose \
     && chmod +x /usr/local/lib/docker/cli-plugins/docker-compose \
+    && cp /usr/local/lib/docker/cli-plugins/docker-compose /usr/local/bin/docker-compose \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace

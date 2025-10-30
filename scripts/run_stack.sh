@@ -1,15 +1,27 @@
 #!/bin/bash
 set -euo pipefail
+
 CMD=${1:-start}
+
+if [ -f /workspace/docker/docker-compose.yml ]; then
+  COMPOSE_FILE="/workspace/docker/docker-compose.yml"
+else
+  COMPOSE_FILE="docker/docker-compose.yml"
+fi
+
+compose() {
+  docker compose -f "$COMPOSE_FILE" "$@"
+}
+
 case "$CMD" in
   start)
-    docker exec -it orchestrator bash -lc "docker compose -f /workspace/docker-compose.yml up -d vosk piper llm probe"
+    compose up -d vosk piper llm probe
     ;;
   stop)
-    docker exec -it orchestrator bash -lc "docker compose -f /workspace/docker-compose.yml down"
+    compose down
     ;;
   logs)
-    docker exec -it orchestrator bash -lc "docker compose -f /workspace/docker-compose.yml logs -f --tail=200"
+    compose logs -f --tail=200
     ;;
   *)
     echo "Usage: ./scripts/run_stack.sh {start|stop|logs}"
