@@ -9,8 +9,17 @@ else
   COMPOSE_FILE="docker/docker-compose.yml"
 fi
 
+if docker compose version >/dev/null 2>&1; then
+  COMPOSE_CMD=(docker compose -f "$COMPOSE_FILE")
+elif command -v docker-compose >/dev/null 2>&1; then
+  COMPOSE_CMD=(docker-compose -f "$COMPOSE_FILE")
+else
+  echo "❌ Neither 'docker compose' nor 'docker-compose' is available." >&2
+  exit 1
+fi
+
 compose() {
-  docker compose -f "$COMPOSE_FILE" "$@"
+  "${COMPOSE_CMD[@]}" "$@"
 }
 
 case "$CMD" in
