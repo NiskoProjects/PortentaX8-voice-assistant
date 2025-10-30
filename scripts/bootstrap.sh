@@ -12,6 +12,10 @@ fi
 
 mkdir -p docker/orchestrator config models/vosk models/piper models/llm scripts
 
+# Ensure host scripts are executable (handles Windows clones)
+find scripts -type f -name '*.sh' -exec chmod +x {} +
+find docker -type f -name '*.sh' -exec chmod +x {} +
+
 cat > scripts/run_stack.sh <<'EOS'
 #!/bin/bash
 set -euo pipefail
