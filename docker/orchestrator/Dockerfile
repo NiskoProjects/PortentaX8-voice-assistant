@@ -1,8 +1,13 @@
 FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
+ARG COMPOSE_VERSION="v2.24.5"
 RUN apt-get update && apt-get install -y \
-    docker.io docker-compose-plugin curl vim net-tools iputils-ping ca-certificates unzip \
+    docker.io curl vim net-tools iputils-ping ca-certificates unzip \
+    && mkdir -p /usr/local/lib/docker/cli-plugins \
+    && curl -SL "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-linux-arm64" \
+       -o /usr/local/lib/docker/cli-plugins/docker-compose \
+    && chmod +x /usr/local/lib/docker/cli-plugins/docker-compose \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace
