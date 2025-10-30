@@ -1,0 +1,3 @@
+.load-module module-native-protocol-unix
+.load-module module-always-sink
+.load-module module-bluetooth-discover

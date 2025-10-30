@@ -1,0 +1,76 @@
+version: "3.9"
+services:
+  audio-gateway:
+    build: ./audio-gateway
+    container_name: audio-gateway
+    devices:
+      - "/dev/snd:/dev/snd"
+    group_add:
+      - "audio"
+    environment:
+      - PULSE_RUNTIME_PATH=/run/pulse
+      - BT_SPEAKER_MAC=${BT_SPEAKER_MAC}
+      - MIC_CARD_HINT=${MIC_CARD_HINT}
+      - AUDIO_GATEWAY_PORT=${AUDIO_GATEWAY_PORT}
+    volumes:
+      - audio_data:/var/assistant/audio
+      - /run/dbus:/run/dbus
+    network_mode: host
+    restart: unless-stopped
+
+  wake:
+    build: ./wake-openwakeword
+    container_name: wake
+    environment:
+      - AUDIO_WS_URL=ws://127.0.0.1:${AUDIO_GATEWAY_PORT}/audio/mic
+      - WAKE_MODEL=/app/models/hey-nisko.onnx
+      - WAKE_THRESHOLD=${WAKE_THRESHOLD}
+    depends_on: [audio-gateway]
+    network_mode: host
+    restart: unless-stopped
+
+  asr:
+    build: ./asr-vosk
+    container_name: asr
+    environment:
+      - AUDIO_WS_URL=ws://127.0.0.1:${AUDIO_GATEWAY_PORT}/audio/mic
+      - VOSK_MODEL=/app/models/${VOSK_MODEL}
+    depends_on: [audio-gateway, wake]
+    network_mode: host
+    restart: unless-stopped
+
+  llm:
+    build: ./nlu-llm
+    container_name: nlu-llm
+    environment:
+      - LLM_MODEL=/models/${LLM_MODEL}
+      - MAX_TOKENS=128
+      - TEMP=0.2
+      - NLU_HTTP_PORT=${NLU_HTTP_PORT}
+    volumes:
+      - llm_models:/models
+    network_mode: host
+    restart: unless-stopped
+
+  skills:
+    build: ./skills
+    container_name: skills
+    environment:
+      - NLU_URL=http://127.0.0.1:${NLU_HTTP_PORT}
+      - TTS_URL=http://127.0.0.1:8070/say
+    network_mode: host
+    restart: unless-stopped
+
+  tts:
+    build: ./tts-piper
+    container_name: tts
+    environment:
+      - PIPER_VOICE=${PIPER_VOICE}
+      - AUDIO_PLAY_URL=http://127.0.0.1:${AUDIO_GATEWAY_PORT}/audio/play
+    depends_on: [audio-gateway]
+    network_mode: host
+    restart: unless-stopped
+
+volumes:
+  audio_data:
+  llm_models:
