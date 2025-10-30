@@ -37,4 +37,4 @@ chmod +x scripts/run_stack.sh
 docker compose -f docker/docker-compose.yml up -d --build orchestrator
 
 echo "✅ Orchestrator is up. Dropping into orchestrator shell..."
-docker exec -it orchestrator bash -lc 'cd /workspace && ls -la && echo "You are now inside the orchestrator. Run: ./scripts/init_models.sh && ./scripts/run_stack.sh start" && exec bash'
+docker exec -it orchestrator bash -lc 'cd /workspace && ls -la && echo "Running apt-get update && apt-get upgrade -y..." && apt-get update && apt-get upgrade -y && echo "You are now inside the orchestrator. Run: ./scripts/init_models.sh && ./scripts/run_stack.sh start" && exec bash'
