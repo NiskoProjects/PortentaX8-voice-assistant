@@ -9,10 +9,10 @@ services:
     network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./docker:/workspace/docker
-      - ./config:/workspace/config
-      - ./models:/workspace/models
-      - ./scripts:/workspace/scripts
+      - ../docker:/workspace/docker
+      - ../config:/workspace/config
+      - ../models:/workspace/models
+      - ../scripts:/workspace/scripts
     restart: unless-stopped
 
   vosk:
@@ -20,7 +20,7 @@ services:
     container_name: vosk
     network_mode: host
     volumes:
-      - ./models/vosk:/opt/vosk
+      - ../models/vosk:/opt/vosk
     environment:
       - VOSK_SAMPLE_RATE=16000
     restart: unless-stopped
@@ -30,7 +30,7 @@ services:
     container_name: piper
     network_mode: host
     volumes:
-      - ./models/piper:/data
+      - ../models/piper:/data
     command: ["--model", "/data/en_US-amy-medium.onnx", "--server" ]
     restart: unless-stopped
 
@@ -39,7 +39,7 @@ services:
     container_name: llm
     network_mode: host
     volumes:
-      - ./models/llm:/models
+      - ../models/llm:/models
     environment:
       - LLM_MODEL=/models/tiny.gguf
     restart: unless-stopped
@@ -49,5 +49,5 @@ services:
     container_name: probe
     network_mode: host
     volumes:
-      - ./config:/app/config
+      - ../config:/app/config
     restart: unless-stopped
