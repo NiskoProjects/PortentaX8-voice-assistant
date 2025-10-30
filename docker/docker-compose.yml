@@ -1,0 +1,53 @@
+version: "3.9"
+services:
+  orchestrator:
+    build:
+      context: ..
+      dockerfile: docker/orchestrator/Dockerfile
+    container_name: orchestrator
+    privileged: true
+    network_mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./docker:/workspace/docker
+      - ./config:/workspace/config
+      - ./models:/workspace/models
+      - ./scripts:/workspace/scripts
+    restart: unless-stopped
+
+  vosk:
+    image: alphacep/kaldi-vosk-server
+    container_name: vosk
+    network_mode: host
+    volumes:
+      - ./models/vosk:/opt/vosk
+    environment:
+      - VOSK_SAMPLE_RATE=16000
+    restart: unless-stopped
+
+  piper:
+    image: rhasspy/piper
+    container_name: piper
+    network_mode: host
+    volumes:
+      - ./models/piper:/data
+    command: ["--model", "/data/en_US-amy-medium.onnx", "--server" ]
+    restart: unless-stopped
+
+  llm:
+    image: ghcr.io/niskoprojects/small-llm:latest
+    container_name: llm
+    network_mode: host
+    volumes:
+      - ./models/llm:/models
+    environment:
+      - LLM_MODEL=/models/tiny.gguf
+    restart: unless-stopped
+
+  probe:
+    image: ghcr.io/niskoprojects/bluetooth-probe:latest
+    container_name: probe
+    network_mode: host
+    volumes:
+      - ./config:/app/config
+    restart: unless-stopped
