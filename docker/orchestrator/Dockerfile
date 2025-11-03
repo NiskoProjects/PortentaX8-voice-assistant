@@ -12,10 +12,8 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace
-COPY docker/orchestrator/orchestrator.sh /workspace/orchestrator.sh
-COPY docker/orchestrator/check_services.sh /workspace/check_services.sh
-COPY scripts /workspace/scripts
-RUN chmod +x /workspace/orchestrator.sh /workspace/check_services.sh \
-    && find /workspace/scripts -type f -name '*.sh' -exec chmod +x {} +
+COPY docker/orchestrator/orchestrator.sh /usr/local/bin/orchestrator.sh
+COPY docker/orchestrator/check_services.sh /usr/local/bin/check_services.sh
+RUN chmod +x /usr/local/bin/orchestrator.sh /usr/local/bin/check_services.sh
 
-CMD ["/workspace/orchestrator.sh"]
+CMD ["/usr/local/bin/orchestrator.sh"]

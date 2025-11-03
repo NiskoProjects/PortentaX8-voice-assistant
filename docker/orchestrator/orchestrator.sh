@@ -17,5 +17,5 @@ if [ -x /workspace/scripts/init_models.sh ]; then
   /workspace/scripts/init_models.sh || true
 fi
 
-/workspace/check_services.sh &
+/usr/local/bin/check_services.sh &
 exec tail -f /dev/null
