@@ -22,7 +22,7 @@ services:
       - AUDIO_WS_URL=ws://127.0.0.1:8080/audio/mic
       - VOSK_MODEL=/app/models
     volumes:
-      - /workspace/models/vosk/model:/app/models
+      - /home/fio/LA/PortentaX8-voice-assistant/models/vosk/model:/app/models
     restart: unless-stopped
 
   tts:
