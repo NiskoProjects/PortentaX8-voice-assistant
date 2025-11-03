@@ -5,7 +5,7 @@ ARG COMPOSE_VERSION="v2.24.5"
 RUN apt-get update && apt-get install -y \
     docker.io curl vim net-tools iputils-ping ca-certificates unzip \
     && mkdir -p /usr/lib/docker/cli-plugins /usr/local/bin \
-    && curl -SL "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-linux-arm64" \
+    && curl -SL "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-linux-aarch64" \
        -o /usr/local/bin/docker-compose \
     && chmod +x /usr/local/bin/docker-compose \
     && cp /usr/local/bin/docker-compose /usr/lib/docker/cli-plugins/docker-compose \
