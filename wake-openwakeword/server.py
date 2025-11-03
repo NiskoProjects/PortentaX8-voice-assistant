@@ -6,12 +6,13 @@ import websockets
 from openwakeword.model import Model
 
 AUDIO_WS_URL = os.getenv("AUDIO_WS_URL", "ws://127.0.0.1:8080/audio/mic")
-MODEL_PATH = os.getenv("WAKE_MODEL", "/app/models/hey-nisko.onnx")
+WAKE_WORD = os.getenv("WAKE_WORD", "hey_jarvis")  # Use built-in model
 THRESH = float(os.getenv("WAKE_THRESHOLD", "0.5"))
 
-print(f"[wake] connecting to {AUDIO_WS_URL}, model={MODEL_PATH}, thresh={THRESH}")
+print(f"[wake] connecting to {AUDIO_WS_URL}, wake_word={WAKE_WORD}, thresh={THRESH}")
 
-model = Model(wakeword_models=[MODEL_PATH])
+# Use built-in pretrained model instead of custom file
+model = Model(wakeword_models=[WAKE_WORD])
 
 
 async def main():

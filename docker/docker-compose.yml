@@ -61,6 +61,6 @@ services:
     network_mode: host
     environment:
       - AUDIO_WS_URL=ws://127.0.0.1:8080/audio/mic
-      - WAKE_MODEL=/app/models/hey-nisko.onnx
+      - WAKE_WORD=hey_jarvis
       - WAKE_THRESHOLD=0.5
     restart: unless-stopped
