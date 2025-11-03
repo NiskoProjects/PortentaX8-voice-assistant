@@ -15,41 +15,55 @@ services:
       - ../scripts:/workspace/scripts
     restart: unless-stopped
 
-  vosk:
-    image: alphacep/kaldi-vosk-server
-    container_name: vosk
+  asr:
+    build:
+      context: ..
+      dockerfile: asr-vosk/Dockerfile
+    container_name: asr
     network_mode: host
-    volumes:
-      - ../models/vosk:/opt/vosk
     environment:
-      - VOSK_SAMPLE_RATE=16000
+      - AUDIO_WS_URL=ws://127.0.0.1:8080/audio/mic
+      - VOSK_MODEL=/app/models/vosk-model-small-en-us-0.15
+    volumes:
+      - ../models/vosk:/app/models
     restart: unless-stopped
 
-  piper:
-    image: rhasspy/piper
-    container_name: piper
+  tts:
+    build:
+      context: ..
+      dockerfile: tts-piper/Dockerfile
+    container_name: tts
     network_mode: host
+    environment:
+      - PIPER_VOICE=en_US-amy-medium
+      - AUDIO_PLAY_URL=http://127.0.0.1:8080/audio/play
     volumes:
-      - ../models/piper:/data
-    command: ["--model", "/data/en_US-amy-medium.onnx", "--server" ]
+      - ../models/piper:/app/voices
     restart: unless-stopped
 
-  llm:
-    image: alpine:latest
-    container_name: llm
+  nlu:
+    build:
+      context: ..
+      dockerfile: nlu-llm/Dockerfile
+    container_name: nlu
     network_mode: host
-    volumes:
-      - ../models/llm:/models
     environment:
       - LLM_MODEL=/models/tiny.gguf
-    command: ["sh", "-c", "echo 'LLM placeholder - replace with actual llama.cpp server' && tail -f /dev/null"]
+      - MAX_TOKENS=128
+      - TEMP=0.2
+      - NLU_HTTP_PORT=8090
+    volumes:
+      - ../models/llm:/models
     restart: unless-stopped
 
-  probe:
-    image: alpine:latest
-    container_name: probe
+  wake:
+    build:
+      context: ..
+      dockerfile: wake-openwakeword/Dockerfile
+    container_name: wake
     network_mode: host
-    volumes:
-      - ../config:/app/config
-    command: ["sh", "-c", "echo 'Probe placeholder - replace with actual bluetooth probe' && tail -f /dev/null"]
+    environment:
+      - AUDIO_WS_URL=ws://127.0.0.1:8080/audio/mic
+      - WAKE_MODEL=/app/models/hey-nisko.onnx
+      - WAKE_THRESHOLD=0.5
     restart: unless-stopped

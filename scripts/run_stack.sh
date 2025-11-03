@@ -24,7 +24,7 @@ compose() {
 
 case "$CMD" in
   start)
-    compose up -d vosk piper llm probe
+    compose up -d --build asr tts nlu wake
     ;;
   stop)
     compose down
