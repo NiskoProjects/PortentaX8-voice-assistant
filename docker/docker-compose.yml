@@ -20,9 +20,9 @@ services:
     network_mode: host
     environment:
       - AUDIO_WS_URL=ws://127.0.0.1:8080/audio/mic
-      - VOSK_MODEL=/app/models/vosk-model-small-en-us-0.15
+      - VOSK_MODEL=/app/models/model
     volumes:
-      - ../models/vosk:/app/models
+      - ../models/vosk/model:/app/models/model
     restart: unless-stopped
 
   tts:
