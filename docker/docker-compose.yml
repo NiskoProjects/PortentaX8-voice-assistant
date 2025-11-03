@@ -9,10 +9,7 @@ services:
     network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ../docker:/workspace/docker
-      - ../config:/workspace/config
-      - ../models:/workspace/models
-      - ../scripts:/workspace/scripts
+      - ..:/workspace
     restart: unless-stopped
 
   asr:
