@@ -35,19 +35,21 @@ services:
     restart: unless-stopped
 
   llm:
-    image: ghcr.io/niskoprojects/small-llm:latest
+    image: alpine:latest
     container_name: llm
     network_mode: host
     volumes:
       - ../models/llm:/models
     environment:
       - LLM_MODEL=/models/tiny.gguf
+    command: ["sh", "-c", "echo 'LLM placeholder - replace with actual llama.cpp server' && tail -f /dev/null"]
     restart: unless-stopped
 
   probe:
-    image: ghcr.io/niskoprojects/bluetooth-probe:latest
+    image: alpine:latest
     container_name: probe
     network_mode: host
     volumes:
       - ../config:/app/config
+    command: ["sh", "-c", "echo 'Probe placeholder - replace with actual bluetooth probe' && tail -f /dev/null"]
     restart: unless-stopped
