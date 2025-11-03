@@ -24,7 +24,7 @@ compose() {
 
 case "$CMD" in
   start)
-    compose up -d --build asr tts nlu wake
+    compose up -d --build asr tts nlu
     ;;
   stop)
     compose down
