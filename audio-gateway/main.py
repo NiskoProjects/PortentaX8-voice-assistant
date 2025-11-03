@@ -47,13 +47,15 @@ async def audio_play(raw: bytes):
         f.write(raw)
         path = f.name
     try:
+        # Play to headphone jack using ALSA
         subprocess.run(
             [
-                "paplay",
-                "--raw",
-                "--rate=16000",
-                "--channels=1",
-                "--format=s16le",
+                "aplay",
+                "-D", "hw:0,0",
+                "-f", "S16_LE",
+                "-r", "16000",
+                "-c", "1",
+                "-q",
                 path,
             ],
             check=False,

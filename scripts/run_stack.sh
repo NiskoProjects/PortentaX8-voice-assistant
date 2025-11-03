@@ -24,7 +24,7 @@ compose() {
 
 case "$CMD" in
   start)
-    compose up -d --build asr tts nlu
+    compose up -d --build audio-gateway asr tts nlu
     ;;
   stop)
     compose down

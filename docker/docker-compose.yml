@@ -64,3 +64,16 @@ services:
       - WAKE_WORD=hey_jarvis
       - WAKE_THRESHOLD=0.5
     restart: unless-stopped
+
+  audio-gateway:
+    build:
+      context: ..
+      dockerfile: audio-gateway/Dockerfile
+    container_name: audio-gateway
+    network_mode: host
+    privileged: true
+    environment:
+      - AUDIO_GATEWAY_PORT=8080
+    devices:
+      - /dev/snd:/dev/snd
+    restart: unless-stopped
