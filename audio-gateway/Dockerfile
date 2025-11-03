@@ -3,7 +3,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     alsa-utils python3 python3-pip \
     sox curl socat jq procps sudo && \
     rm -rf /var/lib/apt/lists/*
-RUN adduser --system --group --home /app assistant && usermod -aG audio assistant
+RUN groupadd -r assistant && useradd -r -g assistant -d /app -m assistant && usermod -aG audio assistant
 RUN echo "assistant ALL=(ALL) NOPASSWD: /bin/sh" >> /etc/sudoers
 WORKDIR /app
 COPY audio-gateway/requirements.txt .
