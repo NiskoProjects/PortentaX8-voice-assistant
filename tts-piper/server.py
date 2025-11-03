@@ -34,3 +34,10 @@ def say(payload=Body(...)):
     finally:
         os.unlink(out)
     return JSONResponse({"ok": True, "bytes": len(pcm)})
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    print(f"[tts] Starting Piper TTS server, voice={VOICE}")
+    uvicorn.run(app, host="0.0.0.0", port=8072)
