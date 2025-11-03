@@ -5,14 +5,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 RUN adduser --system --group --home /app assistant && usermod -aG audio assistant
 RUN echo "assistant ALL=(ALL) NOPASSWD: /bin/sh" >> /etc/sudoers
-USER assistant
 WORKDIR /app
 COPY audio-gateway/requirements.txt .
-RUN pip3 install --no-cache-dir --break-system-packages -r requirements.txt
 COPY audio-gateway/main.py ./main.py
 COPY audio-gateway/alsa/ ./alsa/
 COPY audio-gateway/pulse/ ./pulse/
 COPY audio-gateway/scripts/ ./scripts/
-RUN chmod +x ./scripts/*.sh
+RUN chmod +x ./scripts/*.sh && chown -R assistant:assistant /app
+USER assistant
+RUN pip3 install --no-cache-dir --break-system-packages -r requirements.txt
 ENV XDG_RUNTIME_DIR=/run/pulse
 ENTRYPOINT ["/app/scripts/entrypoint.sh"]
